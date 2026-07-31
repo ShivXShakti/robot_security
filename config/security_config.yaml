@@ -1,0 +1,27 @@
+# SROS2 Keystore and Policy Configuration for Smart Wheelchair
+
+keystore_name: "wheelchair_keystore"
+
+# By default, use the official standard path for ROS 2 security: ~/.ros/sros2/keystore
+# Can be overridden with an absolute path if a custom directory is desired.
+keystore_path: "~/.ros/sros2/keystore"
+
+# Active policy type:
+# - "mobile_robot" (Unified enclave '/wheelchair' mapping all navigation/control nodes to one identity)
+# - "individual" (Separate enclaves for '/livox_driver', '/dlio_odom_node', '/wheelchair2_base_controller', '/navigation')
+policy_type: "mobile_robot"
+
+# Enclaves definitions mapping policy XML files
+policies:
+  mobile_robot:
+    policy_file: "mobile_robot_policy.xml"
+    enclaves:
+      - name: "/wheelchair"
+  
+  individual:
+    policy_file: "individual_policy.xml"
+    enclaves:
+      - name: "/livox_driver"
+      - name: "/dlio_odom_node"
+      - name: "/wheelchair2_base_controller"
+      - name: "/navigation"

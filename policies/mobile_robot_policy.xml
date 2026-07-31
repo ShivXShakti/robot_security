@@ -1,0 +1,41 @@
+<policy version="0.2.0">
+  <enclaves>
+    <enclave path="/">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic><topic>*/*</topic><topic>rt/*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic><topic>*/*</topic><topic>rt/*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/wheelchair">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW">
+            <topic>*</topic>
+            <topic>*/*</topic>
+            <topic>*/*/*</topic>
+            <topic>rq/*</topic>
+            <topic>rr/*</topic>
+            <topic>rt/*</topic>
+            <topic>rq/*Request</topic>
+            <topic>rr/*Reply</topic>
+          </topics>
+          <topics subscribe="ALLOW">
+            <topic>*</topic>
+            <topic>*/*</topic>
+            <topic>*/*/*</topic>
+            <topic>rq/*</topic>
+            <topic>rr/*</topic>
+            <topic>rt/*</topic>
+            <topic>rq/*Request</topic>
+            <topic>rr/*Reply</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+  </enclaves>
+</policy>

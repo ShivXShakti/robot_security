@@ -1,0 +1,101 @@
+<policy version="0.2.0">
+  <enclaves>
+    <enclave path="/">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic><topic>*/*</topic><topic>rt/*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic><topic>*/*</topic><topic>rt/*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/livox_driver">
+      <profiles>
+        <profile node="livox_driver" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW">
+            <topic>livox/lidar</topic>
+            <topic>livox/imu</topic>
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/dlio_odom_node">
+      <profiles>
+        <profile node="dlio_odom_node" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics subscribe="ALLOW">
+            <topic>livox/lidar</topic>
+            <topic>livox/imu</topic>
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+          <topics publish="ALLOW">
+            <topic>dlio/odom_node/pose</topic>
+            <topic>dlio/odom_node/path</topic>
+            <topic>dlio/odom_node/pointcloud/deskewed</topic>
+            <topic>dlio/odom_node/pointcloud/keyframe</topic>
+            <topic>tf</topic>
+            <topic>tf_static</topic>
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/wheelchair2_base_controller">
+      <profiles>
+        <profile node="wheelchair2_base_controller" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics subscribe="ALLOW">
+            <topic>cmd_vel</topic>
+            <topic>wheelchair2_base_controller/cmd_vel_unstamped</topic>
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+          <topics publish="ALLOW">
+            <topic>odom</topic>
+            <topic>joint_states</topic>
+            <topic>dynamic_joint_states</topic>
+            <topic>wheelchair2_base_controller/transition_event</topic>
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/navigation">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW">
+            <topic>*</topic>
+            <topic>*/*</topic>
+            <topic>*/*/*</topic>
+            <topic>rq/*</topic>
+            <topic>rr/*</topic>
+            <topic>rt/*</topic>
+            <topic>rq/*Request</topic>
+            <topic>rr/*Reply</topic>
+          </topics>
+          <topics subscribe="ALLOW">
+            <topic>*</topic>
+            <topic>*/*</topic>
+            <topic>*/*/*</topic>
+            <topic>rq/*</topic>
+            <topic>rr/*</topic>
+            <topic>rt/*</topic>
+            <topic>rq/*Request</topic>
+            <topic>rr/*Reply</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+  </enclaves>
+</policy>
