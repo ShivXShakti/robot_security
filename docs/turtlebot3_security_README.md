@@ -265,7 +265,7 @@ ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 
 ---
 
-### Terminal 2: Test Authorized Publisher (Robot Moves ✅)
+### Terminal 2: Test Authorized Publisher (Robot Moves)
 Run the publisher using the trusted `turtlebot3_keystore` under the `/cmd_vel_publisher` enclave:
 ```bash
 source /opt/ros/humble/setup.bash
@@ -283,7 +283,7 @@ ros2 run turtlebot3_security cmd_vel_publisher
 
 ---
 
-### Terminal 3: Test Rogue CA Publisher (Blocked at Handshake ❌)
+### Terminal 3: Test Rogue CA Publisher (Blocked at Handshake)
 Run the publisher using the untrusted `rogue_keystore` under the `/cmd_vel_publisher` enclave:
 ```bash
 source /opt/ros/humble/setup.bash
@@ -301,7 +301,7 @@ ros2 run turtlebot3_security cmd_vel_publisher
 
 ---
 
-### Terminal 4: Test Unauthorized Enclave Publisher (Access Control Blocked ❌)
+### Terminal 4: Test Unauthorized Enclave Publisher (Access Control Blocked)
 Run the fake publisher using the trusted `turtlebot3_keystore` but under the `/fake_cmd_vel_publisher` enclave:
 ```bash
 source /opt/ros/humble/setup.bash
