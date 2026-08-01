@@ -1,4 +1,4 @@
-# SROS2 Keystore and Policy Configuration for Smart Wheelchair
+# SROS2 Keystore and Policy Configuration for Smart Wheelchair / TurtleBot3
 
 keystore_name: "wheelchair_keystore"
 
@@ -7,14 +7,15 @@ keystore_name: "wheelchair_keystore"
 keystore_path: "~/.ros/sros2/keystore"
 
 # Active policy type:
-# - "mobile_robot" (Unified enclave '/wheelchair' mapping all navigation/control nodes to one identity)
+# - "wheelchair" (Unified enclave '/wheelchair' mapping all navigation/control nodes to one identity)
 # - "individual" (Separate enclaves for '/livox_driver', '/dlio_odom_node', '/wheelchair2_base_controller', '/navigation')
-policy_type: "mobile_robot"
+# - "turtlebot3" (Enclaves for TurtleBot3 simulation and nodes, including cmd_vel_publisher, cmd_vel_subscriber, fake_cmd_vel_publisher, gazebo, turtlebot3, etc.)
+policy_type: "wheelchair"
 
 # Enclaves definitions mapping policy XML files
 policies:
-  mobile_robot:
-    policy_file: "mobile_robot_policy.xml"
+  wheelchair:
+    policy_file: "wheelchair_policy.xml"
     enclaves:
       - name: "/wheelchair"
   
@@ -25,3 +26,21 @@ policies:
       - name: "/dlio_odom_node"
       - name: "/wheelchair2_base_controller"
       - name: "/navigation"
+
+  turtlebot3:
+    policy_file: "turtlebot3_policy.xml"
+    enclaves:
+      - name: "/"
+      - name: "/cmd_vel_publisher"
+      - name: "/cmd_vel_subscriber"
+      - name: "/fake_cmd_vel_publisher"
+      - name: "/gazebo"
+      - name: "/gazebo_ros_factory"
+      - name: "/gazebo_ros_force_system"
+      - name: "/turtlebot3_diff_drive"
+      - name: "/turtlebot3_imu"
+      - name: "/turtlebot3_joint_state"
+      - name: "/camera_driver"
+      - name: "/robot_state_publisher"
+      - name: "/spawn_entity"
+      - name: "/turtlebot3"

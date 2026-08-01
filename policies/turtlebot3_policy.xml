@@ -1,0 +1,169 @@
+<policy version="0.2.0">
+  <enclaves>
+    <!-- Root Enclave -->
+    <enclave path="/">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW">
+            <service>*</service>
+          </services>
+          <topics publish="ALLOW">
+            <topic>*</topic>
+          </topics>
+          <topics subscribe="ALLOW">
+            <topic>*</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <!-- Authorized CmdVel Publisher Enclave -->
+    <enclave path="/cmd_vel_publisher">
+      <profiles>
+        <profile node="cmd_vel_publisher" ns="/">
+          <services reply="ALLOW" request="ALLOW">
+            <service>*</service>
+          </services>
+          <topics publish="ALLOW">
+            <topic>cmd_vel</topic>
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <!-- Authorized CmdVel Subscriber Enclave -->
+    <enclave path="/cmd_vel_subscriber">
+      <profiles>
+        <profile node="cmd_vel_subscriber" ns="/">
+          <services reply="ALLOW" request="ALLOW">
+            <service>*</service>
+          </services>
+          <topics subscribe="ALLOW">
+            <topic>*</topic>
+          </topics>
+          <topics publish="ALLOW">
+            <topic>*</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <!-- Unauthorized Fake Publisher Enclave (NO cmd_vel publish grant) -->
+    <enclave path="/fake_cmd_vel_publisher">
+      <profiles>
+        <profile node="fake_cmd_vel_publisher" ns="/">
+          <services reply="ALLOW" request="ALLOW">
+            <service>*</service>
+          </services>
+          <topics publish="ALLOW">
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <!-- Gazebo Core & Plugin Enclaves -->
+    <enclave path="/gazebo">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/gazebo_ros_factory">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/gazebo_ros_force_system">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/turtlebot3_diff_drive">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/turtlebot3_imu">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/turtlebot3_joint_state">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/camera_driver">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/robot_state_publisher">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/spawn_entity">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+
+    <enclave path="/turtlebot3">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW"><topic>*</topic></topics>
+          <topics subscribe="ALLOW"><topic>*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+  </enclaves>
+</policy>

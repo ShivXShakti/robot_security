@@ -1,13 +1,14 @@
 # robot_security
 
-A ROS 2 package designed to manage, configure, and dynamically generate SROS2 security keystores, enclaves, and signed permission files for the Smart Wheelchair platform.
+A ROS 2 package designed to manage, configure, and dynamically generate SROS2 security keystores, enclaves, and signed permission files for the Smart Wheelchair and TurtleBot3 platforms.
 
 ## Features
 
 - **YAML-Based Configuration**: Easily configure the keystore name, storage path, active policy, and the enclaves list.
 - **Support for Multiple Policies**: 
-  - `mobile_robot` policy: A unified SROS2 enclave policy (mapping all nodes to a single identity `/wheelchair`).
+  - `wheelchair` policy: A unified SROS2 enclave policy (mapping all nodes to a single identity `/wheelchair`).
   - `individual` policy: An isolated SROS2 multi-enclave policy with specific permissions for the LiDAR driver, DLIO odometry, base controller, and navigation.
+  - `turtlebot3` policy: Standard SROS2 policy for simulated and physical TurtleBot3 systems (burger, waffle_pi) in Gazebo and real environments.
 - **Idempotent Generation**: Skipping key regeneration if enclave certificates already exist, but cleanly refreshing policies and signatures.
 - **Automated Docker Integration**: Automatically generates security keystores during Docker image builds.
 
@@ -23,12 +24,12 @@ keystore_name: "wheelchair_keystore"
 # Path where the keystore files are generated. Defaults to the ROS 2 standard path.
 keystore_path: "~/.ros/sros2/keystore"
 
-# Policy type to activate ("mobile_robot" or "individual")
-policy_type: "mobile_robot"
+# Policy type to activate ("wheelchair", "individual", or "turtlebot3")
+policy_type: "wheelchair"
 
 policies:
-  mobile_robot:
-    policy_file: "mobile_robot_policy.xml"
+  wheelchair:
+    policy_file: "wheelchair_policy.xml"
     enclaves:
       - name: "/wheelchair"
   
@@ -39,6 +40,24 @@ policies:
       - name: "/dlio_odom_node"
       - name: "/wheelchair2_base_controller"
       - name: "/navigation"
+
+  turtlebot3:
+    policy_file: "turtlebot3_policy.xml"
+    enclaves:
+      - name: "/"
+      - name: "/cmd_vel_publisher"
+      - name: "/cmd_vel_subscriber"
+      - name: "/fake_cmd_vel_publisher"
+      - name: "/gazebo"
+      - name: "/gazebo_ros_factory"
+      - name: "/gazebo_ros_force_system"
+      - name: "/turtlebot3_diff_drive"
+      - name: "/turtlebot3_imu"
+      - name: "/turtlebot3_joint_state"
+      - name: "/camera_driver"
+      - name: "/robot_state_publisher"
+      - name: "/spawn_entity"
+      - name: "/turtlebot3"
 ```
 
 ---
@@ -69,13 +88,6 @@ The script will:
 
 ---
 
-## Integration in Docker Builds
+## Documentation
 
-When building the workspace container, you can bake the SROS2 keystore directly into the image by running:
-
-```dockerfile
-# Run the generator script to create the keystore
-RUN /bin/bash -c "source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run robot_security generate_keystore"
-```
-
-This populates `/home/container_user/.ros/sros2/keystore` inside the container. Since this location is in the home folder, it is not overwritten when bind-mounting the host's workspace directory over `~/wheelchair2/src`.
+- [TurtleBot3 SROS2 Guide](docs/turtlebot3_security_README.md): Detailed manual for running secure TurtleBot3 Gazebo simulations and testing authorized vs. unauthorized/rogue publishers.
