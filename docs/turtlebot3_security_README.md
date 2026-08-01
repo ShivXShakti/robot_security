@@ -214,7 +214,7 @@ export TURTLEBOT3_MODEL=waffle_pi
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/Documents/turtlebot3_ws/src/test_keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
 export ROS_DOMAIN_ID=56
 
 ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
@@ -230,7 +230,7 @@ source /home/robot/Documents/turtlebot3_ws/install/setup.bash
 
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/Documents/turtlebot3_ws/src/test_keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
 export ROS_SECURITY_ENCLAVE=/cmd_vel_publisher
 export ROS_DOMAIN_ID=56
 
@@ -247,7 +247,7 @@ source /home/robot/Documents/turtlebot3_ws/install/setup.bash
 
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/Documents/turtlebot3_ws/src/test_keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
 export ROS_SECURITY_ENCLAVE=/fake_cmd_vel_publisher
 export ROS_DOMAIN_ID=56
 
@@ -278,7 +278,7 @@ ros2 run turtlebot3_security fake_cmd_vel_publisher
 
 ### Secure Navigation2 (Nav2) with RViz2 Goal Planner
 
-To run the secure TurtleBot3 Gazebo simulation and the Navigation2 stack under our SROS2 configuration, both terminals must enforce the security strategy and point to the trusted `test_keystore`. Because the launch files spawn multiple core nodes, services, and plugins, they run under the root enclave (`/`), which has wildcard permissions for all necessary topics, services, and actions.
+To run the secure TurtleBot3 Gazebo simulation and the Navigation2 stack under our SROS2 configuration, both terminals must enforce the security strategy and point to the trusted `keystore`. Because the launch files spawn multiple core nodes, services, and plugins, they run under the root enclave (`/`), which has wildcard permissions for all necessary topics, services, and actions.
 
 #### Terminal A: Launch Secure Gazebo World (e.g. Burger model)
 ```bash
@@ -289,7 +289,7 @@ export TURTLEBOT3_MODEL=burger
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/Documents/turtlebot3_ws/src/test_keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
 export ROS_SECURITY_ENCLAVE=/
 export ROS_DOMAIN_ID=56
 
@@ -304,7 +304,7 @@ source /home/robot/Documents/turtlebot3_ws/install/setup.bash
 export TURTLEBOT3_MODEL=burger
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/Documents/turtlebot3_ws/src/test_keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
 export ROS_SECURITY_ENCLAVE=/
 export ROS_DOMAIN_ID=56
 

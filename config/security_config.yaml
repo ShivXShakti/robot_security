@@ -1,6 +1,6 @@
 # SROS2 Keystore and Policy Configuration for Smart Wheelchair / TurtleBot3
 
-keystore_name: "wheelchair_keystore"
+keystore_name: "external_keystore"   #wheelchair_keystore
 
 # By default, use the official standard path for ROS 2 security: ~/.ros/sros2/keystore
 # Can be overridden with an absolute path if a custom directory is desired.
@@ -10,7 +10,7 @@ keystore_path: "~/.ros/sros2/keystore"
 # - "wheelchair" (Unified enclave '/wheelchair' mapping all navigation/control nodes to one identity)
 # - "wheelchair_individual" (Separate enclaves for '/livox_driver', '/dlio_odom_node', '/wheelchair2_base_controller', '/navigation')
 # - "turtlebot3" (Enclaves for TurtleBot3 simulation and nodes, including cmd_vel_publisher, cmd_vel_subscriber, fake_cmd_vel_publisher, gazebo, turtlebot3, etc.)
-policy_type: "wheelchair"
+policy_type: "turtlebot3"
 
 # Enclaves definitions mapping policy XML files
 policies:
