@@ -7,7 +7,7 @@ A ROS 2 package designed to manage, configure, and dynamically generate SROS2 se
 - **YAML-Based Configuration**: Easily configure the keystore name, storage path, active policy, and the enclaves list.
 - **Support for Multiple Policies**: 
   - `wheelchair` policy: A unified SROS2 enclave policy (mapping all nodes to a single identity `/wheelchair`).
-  - `individual` policy: An isolated SROS2 multi-enclave policy with specific permissions for the LiDAR driver, DLIO odometry, base controller, and navigation.
+  - `wheelchair_individual` policy: An isolated SROS2 multi-enclave policy with specific permissions for the LiDAR driver, DLIO odometry, base controller, and navigation.
   - `turtlebot3` policy: Standard SROS2 policy for simulated and physical TurtleBot3 systems (burger, waffle_pi) in Gazebo and real environments.
 - **Idempotent Generation**: Skipping key regeneration if enclave certificates already exist, but cleanly refreshing policies and signatures.
 - **Automated Docker Integration**: Automatically generates security keystores during Docker image builds.
@@ -24,7 +24,7 @@ keystore_name: "wheelchair_keystore"
 # Path where the keystore files are generated. Defaults to the ROS 2 standard path.
 keystore_path: "~/.ros/sros2/keystore"
 
-# Policy type to activate ("wheelchair", "individual", or "turtlebot3")
+# Policy type to activate ("wheelchair", "wheelchair_individual", or "turtlebot3")
 policy_type: "wheelchair"
 
 policies:
@@ -33,8 +33,8 @@ policies:
     enclaves:
       - name: "/wheelchair"
   
-  individual:
-    policy_file: "individual_policy.xml"
+  wheelchair_individual:
+    policy_file: "wheelchair_individual_policy.xml"
     enclaves:
       - name: "/livox_driver"
       - name: "/dlio_odom_node"
