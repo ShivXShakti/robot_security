@@ -20,9 +20,9 @@ This document is a comprehensive, step-by-step manual for implementing ROS 2 Sec
 5. [Testing TurtleBot3 in Gazebo Simulation](#testing-turtlebot3-in-gazebo-simulation)
    - [Step 0: Cleanup Old Gazebo Processes](#step-0-cleanup-old-gazebo-processes)
    - [Terminal 1: Launch Secure Gazebo Simulation](#terminal-1-launch-secure-gazebo-simulation)
-   - [Terminal 2: Test Authorized Publisher (Robot Moves ✅)](#terminal-2-test-authorized-publisher-robot-moves-)
-   - [Terminal 3: Test Unauthorized Enclave Publisher (Blocked ❌)](#terminal-3-test-unauthorized-enclave-publisher-blocked-)
-   - [Terminal 4: Test Rogue CA Publisher (Handshake Rejected ❌)](#terminal-4-test-rogue-ca-publisher-handshake-rejected-)
+   - [Terminal 2: Test Authorized Publisher (Robot Moves)](#terminal-2-test-authorized-publisher-robot-moves-)
+   - [Terminal 3: Test Unauthorized Enclave Publisher (Blocked)](#terminal-3-test-unauthorized-enclave-publisher-blocked-)
+   - [Terminal 4: Test Rogue CA Publisher (Handshake Rejected)](#terminal-4-test-rogue-ca-publisher-handshake-rejected-)
 6. [Layer-wise Robot Security Guide](#layer-wise-robot-security-guide)
 7. [Troubleshooting & Common Pitfalls](#troubleshooting--common-pitfalls)
 
@@ -199,13 +199,55 @@ python3 src/turtlebot3_security/sign_keystore_permissions.py src/rogue_keystore
 
 ## Testing TurtleBot3 in Gazebo Simulation
 
-### Step 0: Cleanup Old Gazebo Processes
+### Step 1: Generate Keystores with `robot_security` Package
+
+To run this test, you need to generate two separate keystores signed by different Root CAs: `turtlebot3_keystore` (trusted) and `rogue_keystore` (untrusted).
+
+#### A. Generate `turtlebot3_keystore`
+1. Edit `config/security_config.yaml` inside `robot_security` package:
+   ```yaml
+   keystore_name: "turtlebot3_keystore"
+   keystore_path: "~/.ros/sros2/turtlebot3_keystore"
+   policy_type: "turtlebot3"
+   ```
+2. Build and run the generator:
+   ```bash
+   cd ~/wheelchair_ws/ros2_ws
+   colcon build --packages-select robot_security
+   source install/setup.bash
+   rm -rf ~/.ros/sros2/turtlebot3_keystore
+   ros2 run robot_security generate_keystore
+   ```
+
+#### B. Generate `rogue_keystore`
+1. Edit `config/security_config.yaml` to configure the rogue keystore (using the same `turtlebot3` policy):
+   ```yaml
+   keystore_name: "rogue_keystore"
+   keystore_path: "~/.ros/sros2/rogue_keystore"
+   policy_type: "turtlebot3"
+   ```
+2. Build and run the generator:
+   ```bash
+   cd ~/wheelchair_ws/ros2_ws
+   colcon build --packages-select robot_security
+   source install/setup.bash
+   rm -rf ~/.ros/sros2/rogue_keystore
+   ros2 run robot_security generate_keystore
+   ```
+
+---
+
+### Step 2: Cleanup Old Gazebo Processes
+Before launching, make sure to clean up any running simulator instances:
 ```bash
 pkill -9 -f gzserver || true
 pkill -9 -f gzclient || true
 ```
 
+---
+
 ### Terminal 1: Launch Secure Gazebo Simulation
+Launch the simulator using the trusted `turtlebot3_keystore`. It will run under the root enclave `/`:
 ```bash
 source /opt/ros/humble/setup.bash
 source /home/robot/Documents/turtlebot3_ws/install/setup.bash
@@ -214,7 +256,7 @@ export TURTLEBOT3_MODEL=waffle_pi
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/turtlebot3_keystore
 export ROS_DOMAIN_ID=56
 
 ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
@@ -224,55 +266,56 @@ ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
 ---
 
 ### Terminal 2: Test Authorized Publisher (Robot Moves ✅)
+Run the publisher using the trusted `turtlebot3_keystore` under the `/cmd_vel_publisher` enclave:
 ```bash
 source /opt/ros/humble/setup.bash
 source /home/robot/Documents/turtlebot3_ws/install/setup.bash
 
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/turtlebot3_keystore
 export ROS_SECURITY_ENCLAVE=/cmd_vel_publisher
 export ROS_DOMAIN_ID=56
 
 ros2 run turtlebot3_security cmd_vel_publisher
 ```
-**Result**: Enclave `/cmd_vel_publisher` is trusted and has `cmd_vel` publish permission. **TurtleBot3 moves in circles!**
+**Result**: Enclave `/cmd_vel_publisher` is signed by the trusted CA and has access control permission to publish `cmd_vel`. **TurtleBot3 moves in circles!**
 
 ---
 
-### Terminal 3: Test Unauthorized Enclave Publisher (Blocked ❌)
+### Terminal 3: Test Rogue CA Publisher (Blocked at Handshake ❌)
+Run the publisher using the untrusted `rogue_keystore` under the `/cmd_vel_publisher` enclave:
 ```bash
 source /opt/ros/humble/setup.bash
 source /home/robot/Documents/turtlebot3_ws/install/setup.bash
 
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/rogue_keystore
+export ROS_SECURITY_ENCLAVE=/cmd_vel_publisher
+export ROS_DOMAIN_ID=56
+
+ros2 run turtlebot3_security cmd_vel_publisher
+```
+**Result**: The Gazebo simulator immediately rejects the publisher during the PKI handshake phase because its CA certificate (`identity_ca.cert.pem`) is not trusted by `turtlebot3_keystore`. **TurtleBot3 DOES NOT move!**
+
+---
+
+### Terminal 4: Test Unauthorized Enclave Publisher (Access Control Blocked ❌)
+Run the fake publisher using the trusted `turtlebot3_keystore` but under the `/fake_cmd_vel_publisher` enclave:
+```bash
+source /opt/ros/humble/setup.bash
+source /home/robot/Documents/turtlebot3_ws/install/setup.bash
+
+export ROS_SECURITY_ENABLE=true
+export ROS_SECURITY_STRATEGY=Enforce
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/turtlebot3_keystore
 export ROS_SECURITY_ENCLAVE=/fake_cmd_vel_publisher
 export ROS_DOMAIN_ID=56
 
 ros2 run turtlebot3_security fake_cmd_vel_publisher
 ```
-**Result**: Enclave `/fake_cmd_vel_publisher` is signed by CA, but lacks `cmd_vel` publish permission. FastDDS drops data packets. **TurtleBot3 DOES NOT move!**
-
----
-
-### Terminal 4: Test Rogue CA Publisher (Handshake Rejected ❌)
-```bash
-source /opt/ros/humble/setup.bash
-source /home/robot/Documents/turtlebot3_ws/install/setup.bash
-
-export ROS_SECURITY_ENABLE=true
-export ROS_SECURITY_STRATEGY=Enforce
-
-# Point to ROGUE UNTRUSTED KEYSTORE!
-export ROS_SECURITY_KEYSTORE=/home/robot/Documents/turtlebot3_ws/src/rogue_keystore
-export ROS_SECURITY_ENCLAVE=/cmd_vel_publisher
-export ROS_DOMAIN_ID=56
-
-ros2 run turtlebot3_security fake_cmd_vel_publisher
-```
-**Result**: DDS Security fails at the PKI handshake stage because `rogue_keystore` CA is untrusted. Participant is rejected. **TurtleBot3 DOES NOT move!**
+**Result**: The enclave `/fake_cmd_vel_publisher` is signed by the trusted CA, but lacks permissions to publish `/cmd_vel` in its policy. FastDDS drops its packets at the reader side. **TurtleBot3 DOES NOT move!**
 
 ---
 
