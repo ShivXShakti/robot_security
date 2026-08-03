@@ -91,3 +91,4 @@ The script will:
 ## Documentation
 
 - [TurtleBot3 SROS2 Guide](docs/turtlebot3_security_README.md): Detailed manual for running secure TurtleBot3 Gazebo simulations and testing authorized vs. unauthorized/rogue publishers.
+- [Wheelchair SROS2 Guide](docs/wheelchair_security.md): Test for running secure wheelchair and testing authorized vs. unauthorized/rogue publishers.
