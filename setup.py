@@ -25,7 +25,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'generate_keystore = robot_security.generate_keystore:main'
+            'generate_keystore = robot_security.generate_keystore:main',
+            'e_send_goal = robot_security.e_send_goal:main'
         ],
     },
 )
