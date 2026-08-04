@@ -57,7 +57,6 @@ def main(args=None):
     action_client_node = WheelchairNavGoal()
     
     # --- EDIT YOUR GOAL HERE ---
-    # Target: 2.0 meters forward, 1.0 meter left, facing 90 degrees left (1.57 rad)
     # glass frontt
     # target_x = 7.2
     # target_y = 4.4
@@ -69,8 +68,6 @@ def main(args=None):
     target_yaw = -0.026
     
     action_client_node.send_goal(target_x, target_y, target_yaw)
-    
-    # Spin the node so it can listen for server callbacks
     rclpy.spin(action_client_node)
 
 if __name__ == '__main__':

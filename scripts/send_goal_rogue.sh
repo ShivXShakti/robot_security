@@ -1,20 +1,26 @@
 #!/bin/bash
 
+sudo sysctl -w net.core.rmem_max=10485760
+sudo sysctl -w net.core.wmem_max=10485760
+
+# Make it permanent
+echo "net.core.rmem_max=10485760" | sudo tee -a /etc/sysctl.conf
+echo "net.core.wmem_max=10485760" | sudo tee -a /etc/sysctl.con
+
 # Source setup paths
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
-# Enable SROS2 Security
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-#export ROS_SECURITY_KEYSTORE=/home/robot/wheelchair_ws/wheelchair2/wheelchair_keystore_unified
-export ROS_SECURITY_KEYSTORE=/home/container_user/.ros/sros2/rogue_keystore
+export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/rogue_keystore
 export ROS_SECURITY_ENCLAVE=/wheelchair
 export ROS_DOMAIN_ID=56
 
 # Use CycloneDDS to match the Jetson's RMW
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-# export CYCLONEDDS_URI=file:///home/container_user/wheelchair_ws/wheelchair2/scripts/cyclonedds_laptop.xml
+# export CYCLONEDDS_URI=file:///home/robot/wheelchair_ws/wheelchair2/scripts/cyclonedds_laptop.xml
+export CYCLONEDDS_URI=file:///home/container_user/wheelchair2/src/scripts/cyclonedds_jetson.xml
 
 # Launch RViz
 ros2 run robot_security e_send_goal
