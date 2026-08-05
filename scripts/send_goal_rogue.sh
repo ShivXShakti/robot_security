@@ -8,12 +8,14 @@ echo "net.core.rmem_max=10485760" | sudo tee -a /etc/sysctl.conf
 echo "net.core.wmem_max=10485760" | sudo tee -a /etc/sysctl.con
 
 # Source setup paths
+colcon build --symlink-install --packages-select robot_security
+
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
 export ROS_SECURITY_ENABLE=true
 export ROS_SECURITY_STRATEGY=Enforce
-export ROS_SECURITY_KEYSTORE=/home/robot/.ros/sros2/rogue_keystore
+export ROS_SECURITY_KEYSTORE=/home/container_user/.ros/sros2/rogue_keystore
 export ROS_SECURITY_ENCLAVE=/wheelchair
 export ROS_DOMAIN_ID=56
 

@@ -5,14 +5,16 @@
 1. [Generate Keystores](#generate-keystores)
 2. [Wheelchair Security Demo on Host](#wheelchair-security-demo-on-host)
    - [Terminal 1: Launch Secure Navigation stack](#terminal-1-launch-secure-navigation-stack)
-   - [Terminal 2: Test Authorized Publisher (Robot Moves)](#terminal-2-test-authorized-publisher-robot-moves-)
-   - [Terminal 3: Test Unauthorized Enclave Publisher (Blocked)](#terminal-3-test-unauthorized-enclave-publisher-blocked-)
-   - [Terminal 4: Test without Enclave](#terminal-4-test-without-enclave)
+   - [Terminal 2: Run RVIZ](#terminal-2-run-rviz)
+   - [Terminal 3: Test Authorized Publisher (Robot Moves)](#terminal-3-test-authorized-publisher-robot-moves-)
+   - [Terminal 4: Test Unauthorized Enclave Publisher (Blocked)](#terminal-4-test-unauthorized-enclave-publisher-blocked-)
+   - [Terminal 5: Test without Enclave](#terminal-5-test-without-enclave)
 3. [Wheelchair Security Demo using system](#wheelchair-security-demo-using-remote-system)
    - [Terminal 1: Launch Secure Navigation stack](#terminal-1-launch-secure-secure-navigation-stack)
-   - [Terminal 2: Test Authorized Publisher (Robot Moves)](#terminal-2-test-authorized-publisher-robot-moves-)
-   - [Terminal 3: Test Unauthorized Enclave Publisher (Blocked)](#terminal-3-test-unauthorized-enclave-publisher-blocked-)
-   - [Terminal 4: Test without Enclave](#terminal-4-test-without-enclave)
+   - [Terminal 2: Run RVIZ](#terminal-2-run-rviz)
+   - [Terminal 3: Test Authorized Publisher (Robot Moves)](#terminal-3-test-authorized-publisher-robot-moves-)
+   - [Terminal 4: Test Unauthorized Enclave Publisher (Blocked)](#terminal-4-test-unauthorized-enclave-publisher-blocked-)
+   - [Terminal 5: Test without Enclave](#terminal-5-test-without-enclave)
 4. [Wheelchair security Demo videos](#wheelchair-security-demo-videos)
 
 ---
@@ -84,12 +86,24 @@ Then run
 cd ~/wheelchair2
 ./src/wheelchair2_navigation/shell_scripts/nav_3D_loc_cyclone.tmux
 ```
+---
+
+### Terminal 2: Run RVIZ
+
+Ensure export CYCLONEDDS_URI=file:///home/robot/wheelchair_ws/wheelchair2/scripts/cyclonedds_laptop.xml
+
+```
+docker exec -it -u container_user wheelchair_nav bash
+cd ~/wheelchair2
+./src/wheelchair2_navigation/shell_scripts/rviz_nav_secure_jetson.sh
+```
 
 ---
 
 ### Terminal 2: Test Authorized Publisher (Robot Moves)
 Run the publisher using the trusted `wheelchair_keystore` enclave:
 ```bash
+docker exec -it -u container_user wheelchair_nav bash
 cd ~/wheelchair2
 sudo sysctl -w net.core.rmem_max=10485760
 sudo sysctl -w net.core.wmem_max=10485760
@@ -111,9 +125,10 @@ ros2 run robot_security e_send_goal
 
 OR (Ensure export CYCLONEDDS_URI=file:///home/container_user/wheelchair2/src/scripts/cyclonedds_jetson.xml)
 
-```
+```bash
+docker exec -it -u container_user wheelchair_nav bash
 cd ~/wheelchair2
-./dependencies/robot_security/scripts/send_goal_secure.sh
+./src/dependencies/robot_security/scripts/send_goal_secure.sh
 ```
 **Result**: Enclave `/wheelchair` is signed by the trusted CA and has access control permission to `navigate_to_pose` request.
 
@@ -167,18 +182,7 @@ OR
 cd ~/wheelchair2
 ./dependencies/robot_security/scripts/send_goal.sh
 ```
-
-
-
-
-
-
-
-
-
-
-
-
+---
 
 ## Wheelchair Security Demo using remote system
 ### Terminal 1: Launch Secure Navigation stack
@@ -214,7 +218,20 @@ cd ~/wheelchair2
 ```
 ---
 
-### Terminal 2: Test Authorized Publisher (Robot Moves)
+---
+
+### Terminal 2: Run RVIZ
+
+Ensure export CYCLONEDDS_URI=file:///home/robot/wheelchair_ws/wheelchair2/scripts/cyclonedds_laptop.xml
+
+```
+cd ~/wheelchair_ws/wheelchair2
+./wheelchair2_navigation/shell_scripts/rviz_nav_secure.sh
+```
+
+---
+
+### Terminal 3: Test Authorized Publisher (Robot Moves)
 Run the publisher using the trusted `wheelchair_keystore` enclave:
 ```bash
 cd ~/wheelchair_ws/wheelchair2
@@ -246,7 +263,7 @@ cd ~/wheelchair_ws/wheelchair2
 
 ---
 
-### Terminal 3: Test Rogue CA Publisher
+### Terminal 4: Test Rogue CA Publisher
 Run the publisher using the untrusted `rogue_keystore` enclave:
 ```bash
 cd ~/wheelchair_ws/wheelchair2
@@ -278,7 +295,7 @@ cd ~/wheelchair_ws/wheelchair2
 
 ---
 
-### Terminal 4: Test without Enclave
+### Terminal 5: Test without Enclave
 Run the publisher using the untrusted `rogue_keystore` enclave:
 ```bash
 cd ~/wheelchair_ws/wheelchair2
