@@ -58,15 +58,15 @@ def main(args=None):
     
     # --- EDIT YOUR GOAL HERE ---
     # Target: 2.0 meters forward, 1.0 meter left, facing 90 degrees left (1.57 rad)
-    # glass frontt
-    # target_x = 7.2
-    # target_y = 4.4
-    # target_yaw = -1.6
-
-    # # kuldeep
-    target_x = 0.12
-    target_y = 5.19
-    target_yaw = -0.026
+    # # glass frontt
+    target_x = 7.2
+    target_y = 4.4
+    target_yaw = -1.6
+ 
+    # # # # kuldeep
+    # target_x = 0.12
+    # target_y = 5.19
+    # target_yaw = -0.026
     
     action_client_node.send_goal(target_x, target_y, target_yaw)
     
