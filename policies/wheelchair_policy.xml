@@ -18,6 +18,12 @@
             <topic>*</topic>
             <topic>*/*</topic>
             <topic>*/*/*</topic>
+            <topic>*/*/*/*</topic>
+            <topic>sensors/*</topic>
+            <topic>sensors/*/*</topic>
+            <topic>sensors/*/*/*</topic>
+            <topic>sensors/*/*/*/*</topic>
+            <topic>battery_status</topic>
             <topic>rq/*</topic>
             <topic>rr/*</topic>
             <topic>rt/*</topic>
@@ -28,6 +34,12 @@
             <topic>*</topic>
             <topic>*/*</topic>
             <topic>*/*/*</topic>
+            <topic>*/*/*/*</topic>
+            <topic>sensors/*</topic>
+            <topic>sensors/*/*</topic>
+            <topic>sensors/*/*/*</topic>
+            <topic>sensors/*/*/*/*</topic>
+            <topic>battery_status</topic>
             <topic>rq/*</topic>
             <topic>rr/*</topic>
             <topic>rt/*</topic>

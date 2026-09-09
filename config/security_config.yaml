@@ -28,6 +28,7 @@ policies:
       - name: "/dlio_odom_node"
       - name: "/wheelchair2_base_controller"
       - name: "/navigation"
+      - name: "/clearance_sensors"
 
 
   turtlebot3:

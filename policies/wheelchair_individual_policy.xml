@@ -96,6 +96,25 @@
           </topics>
         </profile>
       </profiles>
+    <enclave path="/clearance_sensors">
+      <profiles>
+        <profile node="*" ns="/">
+          <services reply="ALLOW" request="ALLOW"><service>*</service></services>
+          <topics publish="ALLOW">
+            <topic>sensors/*</topic>
+            <topic>sensors/*/*</topic>
+            <topic>sensors/*/*/*</topic>
+            <topic>sensors/*/*/*/*</topic>
+            <topic>battery_status</topic>
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+          <topics subscribe="ALLOW">
+            <topic>parameter_events</topic>
+            <topic>rosout</topic>
+          </topics>
+        </profile>
+      </profiles>
     </enclave>
   </enclaves>
 </policy>
